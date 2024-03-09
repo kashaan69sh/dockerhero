@@ -1,13 +1,14 @@
-FROM ubuntu:latest
+###########################################
+# BASE IMAGE
+###########################################
 
-# Set the working directory in the image
-WORKDIR /app
+FROM ubuntu AS build
 
-# Copy the files from the host file system to the image file system
-COPY . /app
+COPY requirements.txt ./
 
-# Install the necessary packages
-RUN apt-get update && apt-get install -y python3 python3-pip
+RUN apt-get update && \apt-get install -y python3 python3-pip &&\ pip install -r requirements.txt 
 
-# Set environment variables
-ENV NAME World
+COPY . .
+
+ENTRYPOINT ["/app"]
+
