@@ -16,10 +16,11 @@ ENTRYPOINT ["/app"]
 # HERE STARTS THE MAGIC OF MULTI STAGE BUILD
 ############################################
 
-FROM scratch
+FROM python:3-slim AS build-env
+COPY . /app
+WORKDIR /app
 
-# Copy the compiled binary from the build stage
-COPY --from=build /app /app
-
-# Set the entrypoint for the container to run the binary
-ENTRYPOINT ["/app"]
+FROM gcr.io/distroless/python3
+COPY --from=build-env /app /app
+WORKDIR /app
+CMD ["hello.py", "/etc"]
